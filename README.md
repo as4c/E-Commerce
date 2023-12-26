@@ -9,14 +9,14 @@ This is an eCommerce web application built with Django and React.js. It utilizes
 - Search Product: Users can search for products based on various criteria.
 - Order Management: Users can place orders, view their order history, and track order status.
 - Categories of Products: Products are categorized into different categories for easy navigation.
-- Braintree API Integration: Integrated Braintree API for secure payment processing.
+- Razorpay Payment Gateway Integration: Integrated Braintree API for secure payment processing.
 
 ## Technologies Used
 
 - Backend:
   - Django: Python-based web framework for building robust web applications.
   - Django Rest Framework (DRF): Toolkit for building RESTful APIs.
-  - Braintree API: Payment gateway integration for processing orders.
+  - Razorpay : Payment gateway integration for processing orders.
 
 - Frontend:
   - React.js: JavaScript library for building interactive user interfaces.
@@ -41,9 +41,9 @@ markdown
 
 3. Set up the backend:
 - Create and activate a virtual environment.
-- Install the required Python dependencies from the Pipfile using `pipenv`:
+- Install the required Python dependencies:
   ```
-  pipenv install --dev
+  pip install -r requirements.txt
   ```
 - Update the database settings in the `settings.py` file.
 - Apply database migrations using `python manage.py migrate`.
