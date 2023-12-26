@@ -1,10 +1,30 @@
 from rest_framework import serializers
 
-from . models import Product
+from . models import Product, ProductImage
 
 
-class ProductSerializer(serializers.HyperlinkedModelSerializer):
-    image = serializers.ImageField(max_length=None,allow_empty_file=False,required=False)
+class ProductSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['seller'] = str(instance.seller)
+        ret['category'] = str(instance.category)
+        return ret
+    
     class Meta:
         model = Product
-        fields = ('id','name','desc','price','image','category')
+        fields = '__all__'
+
+
+class ProductImageSerializer(serializers.ModelSerializer):
+
+    image = serializers.ImageField()
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['product'] = str(instance.product)
+       
+        return ret
+    
+    class Meta:
+        model = ProductImage
+        fields = '__all__'

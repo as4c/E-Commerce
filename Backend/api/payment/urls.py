@@ -1,11 +1,8 @@
 from django.urls import path,include
 from . import views
-# from rest_framework import routers
-# router = routers.DefaultRouter()
-# router.register(r'',views.OrderViewSet)
 
 urlpatterns = [
-    # path('',include(router.urls)),
-    # path('gettoken/<str:id>/<str:token>/',views.generate_token,name="token.generate"),
-    # path('process/<str:id>/<str:token>/',views.process_payment,name='payment.process'),
+    path('process/', views.ProcessOrderPaymentView.as_view(), name = 'process-payment'),
+    path('complete/', views.CompletePaymentView.as_view(), name = 'complete-payment')
+   
 ]
