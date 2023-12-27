@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'api.vendor',
     'api.deliveryboy',
     'api.cart',
-    'api.wishlist'
+    'api.wishlist',
+    'api.reaction'
 ]
 
 MIDDLEWARE = [

@@ -13,4 +13,5 @@ urlpatterns = [
     path('users/wishlist/', include('api.wishlist.urls')),
     path('order/',include('api.order.urls')),
     path('payment/',include('api.payment.urls')),
+    path('', include('api.reaction.urls'))
 ]

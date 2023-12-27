@@ -18,6 +18,10 @@ class Product(BaseModel):
     discount                =   models.IntegerField(default = 0)
     stock                   =   models.IntegerField(default = 100)
     is_available            =   models.BooleanField(default = True, blank = True)
+   
+
+
+
     # image                 =   models.ImageField(upload_to='images/',blank=True,null=True)
     
     class Meta:
@@ -31,7 +35,7 @@ class Product(BaseModel):
             return self.actual_price
         else:
             return int((self.actual_price - (self.actual_price * (self.discount / 100)))*1)
-        
+     
     def save(self, *args, **kwargs):
         self.effective_price = self.calculate_effective_price()
         super().save(*args, **kwargs)
