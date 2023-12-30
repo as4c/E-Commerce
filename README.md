@@ -20,24 +20,19 @@ This is an eCommerce web application built with Django and React.js. It utilizes
 
 - Frontend:
   - React.js: JavaScript library for building interactive user interfaces.
-  - React Router: Library for handling client-side routing in a React application.
-  - Axios: HTTP client library for making API requests.
+  - React Router Dom: Library for handling client-side routing in a React application.
 
 ## Installation and Setup
 
 1. Clone the repository:
-
+```
 git clone https://github.com/as4c/E-Commerce.git
-
-csharp
-
+```
 
 2. Change into the project directory:
-
+```
 cd ecommerce-django-project
-
-markdown
-
+```
 
 3. Set up the backend:
 - Create and activate a virtual environment.
@@ -60,7 +55,7 @@ markdown
 
 Before running the app, make sure to configure the following settings:
 
-- Braintree API: Set up your Braintree API credentials in the appropriate Django settings file.
+- Razorpay : Set up your Razorpay api credentials in the appropriate Django settings file.
 - Database Configuration: Update the database settings in the `settings.py` file.
 
 ## Contributing
