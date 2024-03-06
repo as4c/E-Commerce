@@ -1,3 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 body{
-    background: #343a40;
+    background: #fff;
 }
+
+.loading-icon-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .loading-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 150px;
+    margin-left: -2rem;
+  }
+  
+  .loading-icon__circle {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background-color: #2ba7dc;
+    margin-right: 8px;
+    animation: spin 1s ease-in-out infinite;
+  }
+  
+  .loading-icon__circle--first {
+    animation-delay: 0.1s;
+    background-color: #ffc107;
+  
+  }
+  
+  .loading-icon__circle--second {
+    animation-delay: 0.2s;
+  }
+  
+  .loading-icon__circle--third {
+    animation-delay: 0.3s;
+    background-color: #ffc107;
+  }
+  .loading-icon__circle--fourth {
+    animation-delay: 0.3s;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(130%);
+    }
+  }
+  
+.search-btn{
+  margin-top: -0.5rem;
+  bottom: 8px;
+  top: 8px;
+  /* right: -1px; */
+  /* left: 910px; */
+  margin-bottom: -0.5rem;
+}
+/* .logo{
+    left : 5px;
+} */
+
+
+/* 
+.sm{
+    top: '95px';
+    bottom: '454px';
+} */
+
+/* .md{
+    top: 41px;bottom: 454px;left: 721px;
+} */
+
+
+/* :root {
+    --main-color: #4a76a8;
+}
+
+.bg-main-color {
+    background-color: var(--main-color);
+}
+
+.text-main-color {
+    color: var(--main-color);
+}
+
+.border-main-color {
+    border-color: var(--main-color);
+} */
