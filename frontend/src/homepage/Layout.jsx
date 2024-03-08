@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import Navbar from './Component/Navbar';
 import Footer from './Component/Footer';
-import { useDispatch, useSelector } from 'react-redux';
-import { refreshToken } from '../features/actions/authActions';
 import Categories from '../category/Categories';
 
 

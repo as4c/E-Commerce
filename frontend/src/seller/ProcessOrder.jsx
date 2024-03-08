@@ -4,7 +4,6 @@ import { Link, useParams } from 'react-router-dom';
 import { UpdateOrderStatus, getOrderDetails } from '../features/actions/sellerActions';
 import Layout from '../homepage/Layout';
 import { Watch } from 'react-loader-spinner';
-import { BaseUrl } from '../backend';
 import {
   mapAddressCodeToLabel,
   mapGenderCodeToLabel,
@@ -88,7 +87,7 @@ const ProcessOrder = () => {
               <div className='flex flex-col justify-between my-3'>
                 <div className="flex flex-row mx-auto">
                   <Link to={`/product/${product.uid}`}>
-                    <img className='w-40 h-auto block mb-3' src={`${BaseUrl}/${product.image}`} alt='product image' />
+                    <img className='w-40 h-auto block mb-3' src={`${product.image}`} alt='product image' />
                   </Link>
                 </div>
               </div>

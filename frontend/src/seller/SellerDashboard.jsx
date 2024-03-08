@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../homepage/Layout';
 import { loadDashboard } from '../features/actions/sellerActions';
 import Loading from '../helper/Loading';

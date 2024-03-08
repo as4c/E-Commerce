@@ -1,32 +1,23 @@
 
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import Layout from '../../homepage/Layout';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { loadProductData } from '../../features/actions/productActions';
-import { BaseUrl } from '../../backend';
+import { Link, useNavigate} from 'react-router-dom';
 import { loadAddress } from '../../features/actions/addressAction';
 import { buyAll } from '../../features/actions/orderActions';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { CompletePaymentForAll, InitiatePaymentForAll } from '../../features/actions/paymentAction';
 import useRazorpay from "react-razorpay";
 import Swal from 'sweetalert2';
-import { Watch } from 'react-loader-spinner'
 import { mapAddressCodeToLabel } from '../../helper';
+import Loading from '../../helper/Loading';
 
 
 const OrderFromCart = () => {
     const [Razorpay] = useRazorpay();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [add, setAdd] = useState(0);
-    const [remove, setRemove] = useState(0);
     const [addressdata, setAddress] = useState("");
     const [paymentMode, setPaymentMode] = useState("");
-
-    const { pathname } = useLocation();
-    const { uid } = useParams();
-
     const { isAuthenticated, redirect, user } = useSelector((state) => state.auth);
     const { address } = useSelector((state) => state.address);
 
@@ -46,8 +37,8 @@ const OrderFromCart = () => {
     }, [isAuthenticated, dispatch]);
 
 
-    const { product, loading } = useSelector((state) => state.product);
-    const { payment_loading, payments, error } = useSelector((state) => state.payment);
+    const {  loading } = useSelector((state) => state.product);
+    const { payment_loading, } = useSelector((state) => state.payment);
 
     const [checked, setChecked] = useState(false);
 
@@ -73,15 +64,12 @@ const OrderFromCart = () => {
         if (paymentMode === "") {
             alert("Select Payment Mode.")
         }
-        console.log("submit clicked!")
-        console.log("address...", addressdata);
-        console.log("payment mode... ", paymentMode);
+        
         const res1 = await dispatch(buyAll({
             address: addressdata,
             payment_mode: paymentMode
         }));
         const res = await unwrapResult(res1);
-        console.log("order res..", res);
         if (!res.errors) {
             if (paymentMode === 'ONL') {
 
@@ -91,7 +79,6 @@ const OrderFromCart = () => {
 
                 const payment_res = await dispatch(InitiatePaymentForAll({ orders: orders, amount: amount }));
                 const response = await unwrapResult(payment_res);
-                console.log("response1...", response);
                 if (response.success) {
                     var order_id = response.data.razorpay_order_id
 
@@ -109,7 +96,6 @@ const OrderFromCart = () => {
                                 signature: response.razorpay_signature,
                                 amount: amount
                             }))
-                            console.log("complete response...", response);
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Orders Placed Successfully.',
@@ -124,7 +110,7 @@ const OrderFromCart = () => {
                             contact: user.phone,
                         },
                         notes: {
-                            address: "B P Mandal Colllege of engineering, Madhepura",
+                            address: "XYZ, 2229992, Singapore",
                         },
                         theme: {
                             color: "#3399cc",
@@ -166,20 +152,9 @@ const OrderFromCart = () => {
 
     }
 
-    if (loading) {
+    if (loading || payment_loading) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <Watch
-                    visible={true}
-                    height="80"
-                    width="80"
-                    radius="48"
-                    color="#4fa94d"
-                    ariaLabel="watch-loading"
-                    wrapperStyle={{}}
-                    wrapperClass=""
-                />
-            </div>
+            <Loading />
         )
     }
     return (

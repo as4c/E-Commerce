@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { loadAllProduct, loadProductData, updateProductData } from '../features/actions/productActions';
+import { loadAllProduct, updateProductData } from '../features/actions/productActions';
 import { unwrapResult } from '@reduxjs/toolkit';
 import Swal from 'sweetalert2';
 import DatePicker from 'react-datepicker'
-import { loadCategory } from '../features/actions/categoryActions';
-import { resetProductData } from '../features/slices/productSlice';
 import Loading from '../helper/Loading';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';

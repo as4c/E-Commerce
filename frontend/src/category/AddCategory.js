@@ -30,11 +30,9 @@ const AddCategory = () => {
         };
 
     const onSubmit = async (e) => {
-        e.preventDefault();  // Corrected typo
-    
+        e.preventDefault();  
         const res1 = await dispatch(createCategory({ name, description }));
         const res = await unwrapResult(res1);
-        console.log("category res...", res);
         if (!res.errors) {
             Swal.fire({
                 icon: 'success',

@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../homepage/Layout'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadProductList } from '../features/actions/sellerActions';
-import { BaseUrl } from '../backend';
 import { Link, useNavigate } from 'react-router-dom';
-import UpdateModal from '../product/UpdateModal';
 import Loading from '../helper/Loading';
 
 const SellerProductLists = () => {
@@ -30,14 +28,6 @@ const SellerProductLists = () => {
       <Loading />
     )
   }
-
-
-  const showModalHandler = () => {
-    setShowModal(true);
-  };
-  const hideModalHandler = () => {
-    setShowModal(false);
-  };
 
   return (
     <Layout>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { UpdateOrderStatus, getOrders } from '../features/actions/sellerActions';
+import { getOrders } from '../features/actions/sellerActions';
 import Layout from '../homepage/Layout';
 import { Watch } from 'react-loader-spinner';
 import { filterOrder } from '../features/actions/orderActions';

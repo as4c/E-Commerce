@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { BaseUrl } from '../../backend';
 import Layout from '../../homepage/Layout';
 import { loadOrder } from '../../features/actions/orderActions';
 import { Watch } from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
 import { mapOrderStatusToLabel, mapPaymentStatusToLabel,mapPaymentCodeToLabel } from '../../helper';
+import Loading from '../../helper/Loading';
 
 
 
@@ -22,20 +22,7 @@ const OrderList = () => {
 
     if (order_loading) {
         return (
-            
-                <div className="flex items-center justify-center h-screen">
-                    <Watch
-                        visible={true}
-                        height="80"
-                        width="80"
-                        radius="48"
-                        color="#4fa94d"
-                        ariaLabel="watch-loading"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                    />
-                </div>
-            
+            <Loading />
         )
     }
   

@@ -16,8 +16,7 @@ export const signin = async (user) => {
             method: "POST",
             body: formData,
         });
-        const data = await response.json(); // Extract JSON data from the response
-        // console.log("Success from userapi...", data); 
+        const data = await response.json();
         return data;
 
     } catch (err) {

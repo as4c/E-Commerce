@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { timeAgo } from '../helper'
-import { BaseUrl } from '../backend'
 import WishlistButton from './Component/WishlistButton'
 import CartButton from './Component/CartButton'
 import BuyNowButton from './Component/BuyNowButton'

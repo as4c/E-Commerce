@@ -5,7 +5,6 @@ import { signup } from '../features/actions/authActions';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { Watch } from 'react-loader-spinner';
 import GoogleLoginButton from './SocialAuth/GoogleButton';
 import Loading from '../helper/Loading';
 

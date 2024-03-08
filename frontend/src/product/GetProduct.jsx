@@ -3,7 +3,6 @@ import Layout from '../homepage/Layout'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadProductData, searchProduct } from '../features/actions/productActions'
-import { BaseUrl } from '../backend'
 import { timeAgo } from '../helper'
 import Loading from '../helper/Loading'
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -79,7 +78,7 @@ const GetProduct = () => {
                 <div className='grid grid-cols-1 md:grid-cols-2 md:gap-5 w-5/6  p-3 shadow-lg'>
                     <div className='mx-5'>
                         <div className="overflow-hidden rounded-xl flex flex-grow">
-                            <img src={`${BaseUrl}/${product.image}`} alt="" />
+                            <img src={`${product.image}`} alt="" />
 
                         </div>
                     </div>

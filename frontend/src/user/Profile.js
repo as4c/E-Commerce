@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../homepage/Layout';
 import { laodProfile } from '../features/actions/authActions';
 import { deleteAddress, loadAddress } from '../features/actions/addressAction';
-import { BaseUrl } from '../backend';
 import { formateDate, mapAddressCodeToLabel, mapGenderCodeToLabel } from '../helper';
 
 const Profile = () => {
@@ -57,7 +56,6 @@ const Profile = () => {
                                 <div className="image overflow-hidden text-center">
                                     {/* src={`${BaseUrl}/${user.profile_pic}`} */}
                                     {user.profile_pic ? (
-                                        // src="https://lavinephotography.com.au/wp-content/uploads/2022/09/Fam_Kids024-1.jpg" 
                                         <img src={`${user.profile_pic}`} alt="Profile"
                                             className='w-40 h-40 mx-auto rounded-full'
                                         />

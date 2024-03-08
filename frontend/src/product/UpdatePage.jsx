@@ -1,8 +1,7 @@
 import React, {useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Layout from '../homepage/Layout';
-import { BaseUrl } from '../backend';
 import UpdateModal from './UpdateModal';
 import Loading from '../helper/Loading';
 
@@ -148,7 +147,7 @@ const UpdatePage = () => {
                                         <tr className='border-b-2'>
                                             <td className='justify-center flex'>
 
-                                                <img src={`${BaseUrl}/${product.image}`} alt="No Product Image" className='max-w-full h-40' />
+                                                <img src={`${product.image}`} alt="No Product Image" className='max-w-full h-40' />
 
                                             </td>
                                             <td>

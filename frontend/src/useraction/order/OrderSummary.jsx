@@ -3,14 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import Layout from '../../homepage/Layout';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { loadProductData } from '../../features/actions/productActions';
-import { BaseUrl } from '../../backend';
 import { loadAddress } from '../../features/actions/addressAction';
 import { createOrder } from '../../features/actions/orderActions';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { CompletePayment, InitiatePayment } from '../../features/actions/paymentAction';
 import useRazorpay from "react-razorpay";
 import Swal from 'sweetalert2';
-import { Watch } from 'react-loader-spinner'
+import Loading from '../../helper/Loading';
 
 const OrderSummary = () => {
 
@@ -31,6 +30,7 @@ const OrderSummary = () => {
     useEffect(() => {
         document.title = 'Order summary';
     }, []);
+
     useEffect(() => {
         if (isAuthenticated) {
             dispatch(loadProductData({ uid }));
@@ -54,7 +54,7 @@ const OrderSummary = () => {
 
 
     const { product, loading } = useSelector((state) => state.product);
-    const { payment_loading, payments, error } = useSelector((state) => state.payment);
+    const { payment_loading } = useSelector((state) => state.payment);
 
     const removeItem = () => {
         if (quantity > 1) {
@@ -93,36 +93,14 @@ const OrderSummary = () => {
 
     if (product.length === 0 || loading) {
         return (
-            <div className='min-h-screen'>
-                <Watch
-                    visible={true}
-                    height="80"
-                    width="80"
-                    radius="48"
-                    color="#4fa94d"
-                    ariaLabel="watch-loading"
-                    wrapperStyle={{}}
-                    wrapperClass=""
-                />
-            </div>
+            <Loading />
         )
     }
 
     const onSubmit = async () => {
         if (payment_loading) {
             return (
-                <div className="flex items-center justify-center h-screen">
-                    <Watch
-                        visible={true}
-                        height="80"
-                        width="80"
-                        radius="48"
-                        color="#4fa94d"
-                        ariaLabel="watch-loading"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                    />
-                </div>
+                <Loading />
             )
         }
         if (addressdata === "") {
@@ -184,7 +162,7 @@ const OrderSummary = () => {
                             contact: user.phone,
                         },
                         notes: {
-                            address: "B P Mandal Colllege of engineering, Madhepura",
+                            address: "XYZ, 8877667, Singapore",
                         },
                         theme: {
                             color: "#3399cc",
@@ -192,7 +170,6 @@ const OrderSummary = () => {
                     };
 
                     const rzp1 = new Razorpay(options);
-                    // console.log("rzp1..", rzp1);
                     rzp1.on("payment.failed", function (response) {
                         Swal.fire({
                             icon: 'error',
@@ -261,7 +238,7 @@ const OrderSummary = () => {
                         <div className="grid grid-cols-2">
                             <div className='flex flex-col justify-between'>
                                 <div className="flex flex-row mx-auto">
-                                    <img className='w-40 h-auto block mb-3' src={`${BaseUrl}/${product?.image}`} alt='product' />
+                                    <img className='w-40 h-auto block mb-3' src={`${product?.image}`} alt='product' />
                                     <div className="start inline">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
