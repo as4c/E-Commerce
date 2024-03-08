@@ -4,14 +4,10 @@ import { useDispatch } from 'react-redux';
 import { createCategory } from '../features/actions/categoryActions';
 import { unwrapResult } from '@reduxjs/toolkit';
 import Swal from 'sweetalert2';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const AddCategory = () => {
-
-    const location = useLocation();
-    // console.log("location...", location);
-
     const [values, setValues] = useState({
         name: "",
         description: "",

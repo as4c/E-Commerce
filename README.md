@@ -21,7 +21,7 @@ This is an eCommerce web application built with Django and React.js. It utilizes
 - Frontend:
   - React.js: JavaScript library for building interactive user interfaces.
   - React Router Dom: Library for handling client-side routing in a React application.
-
+  - React Redux Toolkit: Library for Managing states.
 ## Installation and Setup
 
 1. Clone the repository:

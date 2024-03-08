@@ -1,5 +1,4 @@
 
-import Swal from 'sweetalert2';
 import { API } from '../../backend';
 import { createAsyncThunk } from "@reduxjs/toolkit";
 

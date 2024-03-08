@@ -6,8 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../helper/Loading';
 
 const SellerProductLists = () => {
-  const [showModal, setShowModal] = useState(false);
-
+ 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,7 +22,7 @@ const SellerProductLists = () => {
     navigate(`/user/seller/update-product/${uid}`)
   }
 
-  if (list.length === 0) {
+  if (list.length === 0 || loading) {
     return (
       <Loading />
     )
@@ -56,7 +55,7 @@ const SellerProductLists = () => {
                 <tr key={data.uid} className='px-auto mx-auto items-center text-center border-b-2'>
                   <td className='justify-center flex'>
                     <Link to={`/product/${data.uid}`}>
-                      <img src={`${data.image}`} alt="No Product Image" className='max-w-full h-40' />
+                      <img src={`${data.image}`} alt="No Product pic" className='max-w-full h-40' />
                     </Link>
                   </td>
                   <td className=''>

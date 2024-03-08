@@ -1,6 +1,5 @@
 import React, {  useEffect, useState } from 'react'
 import { createAddress } from '../../features/actions/addressAction';
-import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';

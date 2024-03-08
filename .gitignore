@@ -3,12 +3,10 @@
 
 *.sqlite3
 
-*.cpp
-*.txt
-
 *node_modules
 *.bin
 *db.sqlite3
 db.sqlite3
 *.vscode
 vscode
+*media

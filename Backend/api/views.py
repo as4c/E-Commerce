@@ -3,4 +3,4 @@ from django.http import JsonResponse
 
 # Create your views here.
 def home(request):
-    return JsonResponse({'info':'Django react Combos Home','name': 'Sagar Kumar Sameer'})
+    return JsonResponse({'info':'This is base api.'})

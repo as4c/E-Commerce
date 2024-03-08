@@ -22,9 +22,7 @@ const UpdatePage = () => {
     
     const { uid } = useParams();
    
-    const { data } = useSelector((state) => state.category);
-  
-    const { loading, list, error } = useSelector(
+    const { loading, list} = useSelector(
         (state) => state.seller
     );
     const product = list.filter(product => product.uid === uid);
@@ -93,18 +91,6 @@ const UpdatePage = () => {
         setShowDate(true);
     }
 
-    const renderDetailRow = (label, value) => (
-        <tr className='border-b-2 mt-5'>
-            <td>
-                <p className='font-semibold text-gray-400 inline'>{label}:</p> {value}
-            </td>
-            <td>
-                <button onClick={showModalHandler} className='block bg-emerald-500 hover:bg-emerald-700 text-white rounded-md m-1 text-center mx-auto px-5 py-1'>
-                    Edit
-                </button>
-            </td>
-        </tr>
-    );
 
     return (
         <Layout>
