@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../homepage/Layout'
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +28,9 @@ const CreateDeliveryBoy = () => {
         
     });
 
-
+    useEffect(() => {
+        document.title = 'Create delivery boy account';
+    }, []);
     const { DLNumber, panCardNumber, alternatePhone, aadharNumber, confirmAadharNumber, bankAccount, confirmBankAccount, bankIfscCode, confirmIfscCode, locality, city, state, zipcodes } = values;
 
     const handleChange = (data) =>

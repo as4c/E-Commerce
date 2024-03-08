@@ -5,7 +5,6 @@ import { loadCategory } from '../features/actions/categoryActions';
 
 const Categories = () => {
     const [categoriesToDisplay, setCategoriesToDisplay] = useState([]);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
     const { data } = useSelector((state) => state.category);
     const dispatch = useDispatch();
@@ -14,9 +13,10 @@ const Categories = () => {
         dispatch(loadCategory());
     }, [dispatch]);
 
-    const OnClickOnCat = (query)=>{
+    const OnClickOnCat = (query) => {
         navigate(`/product/search/${query}`);
     }
+
     useEffect(() => {
         const handleResize = () => {
             const screenWidth = window.innerWidth;
@@ -47,41 +47,36 @@ const Categories = () => {
         };
     }, []);
 
-    const openDropdown = () => {
-        setIsDropdownOpen(true);
-    };
-
-    const closeDropdown = () => {
-        setIsDropdownOpen(false);
-    };
-
-    useEffect(() => {
-        const handleDocumentClick = (e) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-                closeDropdown();
-            }
-        };
-
-        document.addEventListener('click', handleDocumentClick);
-
+    const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+          setIsOpen(false);
+        }
+      };
+    
+      useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
         return () => {
-            document.removeEventListener('click', handleDocumentClick);
+          document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [isDropdownOpen]);
+      }, []);
+    const [isOpen, setIsOpen] = useState(false);
 
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen);
+    };
     return (
-        <div className="bg-slate-700 p-3 overflow-hidden shadow-lg z-20">
+        <div ref={dropdownRef} className="bg-slate-700 p-3 overflow-hidden shadow-lg z-20">
             <div className="container mx-auto flex items-center justify-around">
                 <button
                     className="text-white font-bold text-xl cursor-pointer"
                     id="dropdown-button"
-                    onMouseEnter={openDropdown}
+                    onClick={toggleDropdown}
                 >
                     Categories
                 </button>
                 <ul className="flex flex-shrink-0 inline-block">
                     {categoriesToDisplay.map((category) => (
-                        <li key={category.id} className="text-nowrap">
+                        <li key={category.uid} className="text-nowrap">
                             <a
                                 className="inline-block text-white hover:underline cursor-pointer  hover:text-orange-400 mx-2 text-semibold"
                                 onClick={() => OnClickOnCat(category.name)}
@@ -92,20 +87,17 @@ const Categories = () => {
                     ))}
                 </ul>
             </div>
-            <div className="relative z-20" ref={dropdownRef}>
-                <div
-                    id="dropdown-menu"
-                    className={`flex grid md:grid-cols-4 gap-2 sm:grid-cols-3 gap-1 xs:grid-cols-2 gap-1 ${isDropdownOpen ? 'block' : 'hidden'
-                        } absolute w-4/5 bg-slate-900 text-white shadow-md mt-4`}
-                    onMouseLeave={closeDropdown}
-                >
-                    {data.map((cat) => (
-                        <div key={cat.id} className="py-4 px-4 cursor-pointer hover:bg-gray-50 font-semibold hover:text-orange-400">
-                            <button onClick={() => OnClickOnCat(cat.name)}> {cat.name}</button>
-                        </div>
-                    ))}
+            {isOpen && (
+                <div className="origin-top-left absolute left-2 mt-2 w-4/5 rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                    <div className="flex grid md:grid-cols-4 gap-2 sm:grid-cols-3 gap-1 xs:grid-cols-2 gap-1 absolute bg-slate-900 text-white shadow-md mt-4" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                        {data.map((cat) => (
+                            <div key={cat.uid} className="py-4 px-4 cursor-pointer font-semibold hover:text-orange-400">
+                                <button onClick={() => OnClickOnCat(cat.name)}> {cat.name}</button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };

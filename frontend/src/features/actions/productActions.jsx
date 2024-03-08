@@ -1,6 +1,29 @@
 
+import axios from 'axios';
 import { API } from '../../backend';
 import { createAsyncThunk } from "@reduxjs/toolkit";
+
+
+
+
+export const filterProduct = createAsyncThunk(
+    "filterProduct", async ({sorted, price_range, date}, {rejectWithValue})=> {
+        try {
+            const response = await axios.get(`${API}/product/filter-products/`, {
+              params: {
+                effective_price: sorted,
+                price_range : price_range,
+                date : date 
+              },
+            });
+            return  response.data;
+            
+          } catch (error) {
+            console.error('Error fetching filter data:', error);
+            return rejectWithValue(error);
+          }
+    }
+)
 
 export const searchProduct = createAsyncThunk(
     "searchProduct", async (query, { rejectWithValue }) => {

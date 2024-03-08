@@ -28,12 +28,17 @@ const UpdateModal = ({
 }) => {
 
     const { uid } = useParams();
-    const { loading, data: productData, error } = useSelector(
-        (state) => state.product
+    console.log(
+        "uid", uid
+    )
+    const [wrong, setWrong] = useState('');
+    const { list , error} = useSelector(
+        (state) => state.seller
     );
-    const product = productData.filter(product => product.uid === uid);
-    // console.log("product...", product)
-
+   const {loading : product_loading} = useSelector((state)=> state.product);
+    const product = list.filter(product => product.uid === uid);
+    
+    
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -60,7 +65,6 @@ const UpdateModal = ({
             const selectedCategoryUUID = event.target.value;
             setSelectedCategory(selectedCategoryUUID);
         }
-        // Update other fields
         setValues({ ...values, [data]: event.target.value });
     };
 
@@ -87,12 +91,21 @@ const UpdateModal = ({
 
         if (file) {
             setProductImage(file);
-            console.log("File name:", file.name);
+           
         } else {
             console.log("the submitted data is not a file")
         }
     }
 
+    useEffect(()=> {
+        if(wrong !== ''){
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed.',
+                text: wrong,
+            });
+        }
+    }, [])
     const onUpdate = (e) => {
         e.preventDefault();
 
@@ -112,7 +125,6 @@ const UpdateModal = ({
             payload.date = date.getTime();  
         }
         if (selectedCategory){
-            console.log("category...", selectedCategory)
             payload.category = selectedCategory.uid
         }
 
@@ -161,16 +173,22 @@ const UpdateModal = ({
     };
 
 
-    if (data.length === 0) {
+    if (data.length === 0 || product_loading) {
         return (
            <Loading />
         )
     }
-
-
+    
+    if(product.length === 0 || product[0] === undefined){
+        setWrong("Something went wrong! Try again.");
+    }
+    if(error){
+        setWrong(error);
+    }
+    
     return (
-        <div className="flex items-center justify-center">
-            <div>
+        <div className="flex items-center justify-center z-50">
+            <div className=''>
 
                 {/* Background overlay */}
                 {showModal && (
@@ -189,7 +207,7 @@ const UpdateModal = ({
                         className="fixed z-10 inset-0 overflow-y-auto"
                         style={{ display: 'block' }}
                     >
-                        <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        <div className="z-50 flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center mt-20 sm:block sm:p-0">
                             {/* Modal panel */}
                             <div className="w-full inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -237,7 +255,7 @@ const UpdateModal = ({
                                             )}
 
                                             {image && (
-                                                <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4 hover:outline-none text-gray-400 hover:ring-2 hover:ring-orange-500 text-overflow-ellipsis">
+                                                <div className="flex items-center border-2 py-2 px-3 rounded-2xl my-4 hover:outline-none text-gray-400 hover:ring-2 hover:ring-orange-500 text-overflow-ellipsis z-50">
                                                     <p className="text-sm text-gray-500">
                                                         Add Product Image.
                                                     </p>

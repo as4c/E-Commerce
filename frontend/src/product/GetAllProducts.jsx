@@ -11,18 +11,13 @@ const GetAllProducts = () => {
     const [page, setPage] = useState(1);
     const dispatch = useDispatch();
     const { loading, data } = useSelector((state) => state.product);
-    const [sortedData, setSortedData] = useState(data)
-    
-   
+    useEffect(() => {
+        document.title = 'Homepage';
+    }, []);
     useEffect(() => {
         dispatch(loadAllProduct(page));
     }, [dispatch, page])
 
-
-    useEffect(() => {
-        setSortedData(data); 
-    }, [data]);
-    
     if (loading) {
         return (
             <Loading />
@@ -33,8 +28,8 @@ const GetAllProducts = () => {
             <div className="py-5 bg-white">
                 <h1 className="text-center text-2xl font-bold text-gray-800">All Products</h1>
             </div>
-            {/* <ProductFilter data={sortedData} setSortedData = {setSortedData}/> */}
-            <ProductList data={sortedData} />
+            <ProductFilter/>
+            <ProductList data={data} />
             <div className='bg-white'>
                 <div className='flex flex-row justify-center items-center shadow-sm p-2 rounded-lg'>
                     <button className='text-xl font-bold py-1 px-1 border-r-2 border-gray-500 bg-gray-300' onClick={()=> setPage(pageDecrement(page))}>Previous</button>

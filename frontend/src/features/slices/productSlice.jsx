@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addProduct, deleteData, loadAllProduct, loadProductData, searchProduct, updateProductData } from '../actions/productActions';
+import { addProduct, deleteData, filterProduct, loadAllProduct, loadProductData, searchProduct, updateProductData } from '../actions/productActions';
 
 
 
@@ -99,6 +99,20 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(searchProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(filterProduct.pending, (state) =>{
+        state.loading = true;
+        state.data = []
+      })
+      .addCase(filterProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload
+        state.error = null;
+      })
+      .addCase(filterProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

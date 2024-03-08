@@ -1,10 +1,6 @@
 from django.urls import path, include
 from . import views
-from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from dj_rest_auth.registration.views import SocialLoginView
 
-class CustomGoogleLoginView(SocialLoginView):
-    adapter_class = GoogleOAuth2Adapter
 
 
 
@@ -20,9 +16,6 @@ urlpatterns = [
     path('delete/', views.delete_user_account, name = 'account-delete'),
     path('addresses/', views.AddressView.as_view(), name='address_list'),
     path('addresses/<str:address_uid>/', views.AddressView.as_view(), name='address_detail'),
+    path("google/", views.GoogleLoginApi.as_view(), name="login-with-google"),
 
-    path('social/', include('dj_rest_auth.urls')),  # Authentication URLs
-    path('auth/social/', include('allauth.socialaccount.urls')),  # Social authentication URLs
-    path('signup/social/', include('dj_rest_auth.registration.urls')),  # Registration URLs
-    path('signin/google/', CustomGoogleLoginView.as_view(), name='google_login'),
 ]

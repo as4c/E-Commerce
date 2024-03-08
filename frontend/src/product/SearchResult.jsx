@@ -12,6 +12,9 @@ const SearchResult = () => {
     const { query } = useParams();
     const dispatch = useDispatch();
     useEffect(() => {
+        document.title = 'Product search results';
+    }, []);
+    useEffect(() => {
         dispatch(searchProduct(query));
     }, [query, dispatch])
 

@@ -1,10 +1,12 @@
 // ResetPasswordForm.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API } from '../backend';
 
 const ResetPasswordForm = ({ uid, token }) => {
-   
+    useEffect(() => {
+        document.title = 'Forget password';
+    }, []);
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
     const [showPassword, setShowPassword] = useState(false);

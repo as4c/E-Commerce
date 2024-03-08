@@ -14,7 +14,9 @@ const OrderDashboard = () => {
     const [type, setType] = useState('')
     const [value, setValues] = useState('')
     
-
+    useEffect(() => {
+        document.title = 'Seller order dashboard';
+    }, []);
     useEffect(() => {
         const filterData = (type, value) => {
             if (value === "") {

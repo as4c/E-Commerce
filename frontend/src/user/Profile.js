@@ -11,11 +11,13 @@ const Profile = () => {
     const [del, setDel] = useState(0);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
     const { loading, isAuthenticated, user } = useSelector((state) => state.auth);
     const { address } = useSelector((state) => state.address);
     const { sellerAuthenticated } = useSelector((state) => state.seller);
     const { deliveryBoyAuthenticated } = useSelector((state) => state.deliveryBoy);
+    useEffect(() => {
+        document.title = `${user.username} - profile`;
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -55,7 +57,8 @@ const Profile = () => {
                                 <div className="image overflow-hidden text-center">
                                     {/* src={`${BaseUrl}/${user.profile_pic}`} */}
                                     {user.profile_pic ? (
-                                        <img src="https://lavinephotography.com.au/wp-content/uploads/2022/09/Fam_Kids024-1.jpg" alt="Profile"
+                                        // src="https://lavinephotography.com.au/wp-content/uploads/2022/09/Fam_Kids024-1.jpg" 
+                                        <img src={`${user.profile_pic}`} alt="Profile"
                                             className='w-40 h-40 mx-auto rounded-full'
                                         />
                                     ) : (

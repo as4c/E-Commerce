@@ -7,7 +7,9 @@ const VerificationComponent = () => {
   const { uid, token } = useParams();
   const navigate = useNavigate();
   const [verificationStatus, setVerificationStatus] = useState(null);
-
+  useEffect(() => {
+    document.title = 'Verify account';
+}, []);
   useEffect(() => {
     const verifyAccount = async () => {
       try {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../homepage/Layout';
 import {DeliveryBoyLogin} from '../features/actions/deliveryBoyActions'
 import { useDispatch } from 'react-redux';
@@ -10,7 +10,9 @@ const DeliveryBoyLoginPage = () => {
     const [deliveryBoyID, setdeliveryBoyID] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    useEffect(() => {
+        document.title = 'Delivery boy login';
+    }, []);
     const onChange = (e) =>{
         setdeliveryBoyID(e.target.value);
     }

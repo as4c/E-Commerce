@@ -13,12 +13,14 @@ import {
     mapPaymentCodeToLabel,
     mapPaymentStatusToLabel
 } from '../../helper'
-
+import Loading from '../../helper/Loading'
 const OrderDetail = () => {
     const { order_loading, orderdata } = useSelector((state) => state.order);
     const dispatch = useDispatch();
     const { uid } = useParams();
-
+    useEffect(() => {
+        document.title = 'Order detail';
+    }, []);
     useEffect(() => {
         dispatch(loadOrderData({ uid }))
     }, [dispatch, uid]);
@@ -28,25 +30,15 @@ const OrderDetail = () => {
     const order = orderdata.order;
     const deliveryBoy = orderdata.delivery_boy
 
-    
+
     const handleCancelOrReturn = (value) => {
         dispatch(cancelOrReturnOrder({ order_id: uid, status: value }))
+        window.location.reload()
     }
 
     if (order_loading || !product || !address || !orderdata) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <Watch
-                    visible={true}
-                    height="80"
-                    width="80"
-                    radius="48"
-                    color="#4fa94d"
-                    ariaLabel="watch-loading"
-                    wrapperStyle={{}}
-                    wrapperClass=""
-                />
-            </div>
+           <Loading />
         )
 
     }
@@ -89,7 +81,10 @@ const OrderDetail = () => {
                                         <p className='text-gray-500 '>Vol. {product.volume} ML</p>
                                         <p>Payment mode : {mapPaymentCodeToLabel(order.payment_mode)}</p>
                                         <p>Payment status : {mapPaymentStatusToLabel(order.payment_status)}</p>
-                                        <p className="text-xl font-semibold mb-1">Order Status : {mapOrderStatusToLabel(order.order_status)}</p>
+                                        <p className={`text-xl font-semibold mb-1 ${order.order_status === 'C' ? 'text-red-500' : 'text-green-500'}`}>
+                                            Order Status: {mapOrderStatusToLabel(order.order_status)}
+                                        </p>
+
 
                                     </div>
                                     <div className="flex flex-row justify-between my-2">
@@ -152,7 +147,7 @@ const OrderDetail = () => {
                                     :
                                     (
                                         <>
-                                            <h2 className='text-center'>Delivery not assigned yet.</h2>
+                                            <h2 className='text-center'>Delivery boy not assigned yet.</h2>
                                         </>
                                     )
                                 }

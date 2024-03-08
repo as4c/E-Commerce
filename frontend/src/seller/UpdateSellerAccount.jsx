@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../homepage/Layout';
 
 const UpdateSellerAccount = () => {
+
+    useEffect(() => {
+        document.title = 'Update Seller Account Detail';
+    }, []);
     const [step, setStep] = useState(1);
 
     const nextStep = () => {

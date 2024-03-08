@@ -19,7 +19,9 @@ const GetProduct = () => {
     const { isAuthenticated } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const { uid } = useParams();
-    
+    useEffect(() => {
+        document.title = 'Product Detail';
+    }, []);
     useEffect(()=>{
         dispatch(loadProductData({uid}));
     }, [uid]);

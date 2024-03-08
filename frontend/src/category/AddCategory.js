@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../homepage/Layout'
 import { useDispatch } from 'react-redux';
 import { createCategory } from '../features/actions/categoryActions';
@@ -20,7 +20,9 @@ const AddCategory = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    // const history = 
+    useEffect(() => {
+        document.title = 'Add categories';
+    }, []);
     const handleChange = (data) =>
         (event) => {
             setValues({ ...values, [data]: event.target.value });

@@ -24,7 +24,9 @@ const ProcessOrder = () => {
   const { uid } = useParams();
   const { loading, order_data } = useSelector((state) => state.seller);
   const [status, setStatus] = useState('');
-
+  useEffect(() => {
+    document.title = 'Process order';
+}, []);
   useEffect(() => {
     dispatch(getOrderDetails({ uid }))
   }, [dispatch, uid, status])

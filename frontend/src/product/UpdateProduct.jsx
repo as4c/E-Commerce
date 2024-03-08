@@ -16,6 +16,12 @@ const UpdateProduct = () => {
     const navigate = useNavigate();
     const { uid } = useParams();
     const { product } = useSelector((state) => state.product)
+
+    useEffect(() => {
+        document.title = 'Update Product Detail';
+    }, []);
+
+
     useEffect(() => {
         dispatch(resetProductData());
         dispatch(loadProductData(uid));
@@ -52,7 +58,6 @@ const UpdateProduct = () => {
 
         if (file) {
             setProductImage(file);
-            console.log("File name:", file.name);
         } else {
             console.log("the submitted data is not a file")
         }

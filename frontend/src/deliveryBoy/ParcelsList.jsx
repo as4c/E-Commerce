@@ -12,7 +12,9 @@ const ParcelsList = () => {
     const dispatch = useDispatch();
     const [type, setType] = useState('')
     const [value, setValues] = useState('')
-   
+    useEffect(() => {
+        document.title = 'Parcel lists';
+    }, []);
     useEffect(() => {
         const filterData = (type, value) => {
             if (value === "") {

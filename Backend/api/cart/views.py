@@ -5,44 +5,52 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from api.renderer import UserRenderer
 from .models import UserCart
-from .serializers import UserCartSerializer
+from .serializers import UserCartSerializer, CartGetSerializer
 from django.db.models import F
+from api.product.models import Product
+from api.product.serializers import ProductSerializer 
 
 class UserCartView(APIView):
 
     permission_classes = [IsAuthenticated]
     renderer_classes = [UserRenderer]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         user = request.user
-        cart_item = UserCart.objects.filter(user = user)
-        if cart_item.exists():
-            serializer = UserCartSerializer(cart_item, many=True)
-            return Response(serializer.data)
+        cart_items = UserCart.objects.filter(user=user)
+
+        if cart_items.exists():
+            serializer = CartGetSerializer(cart_items, many=True)
+            data = serializer.data
+            return Response(data, status = status.HTTP_200_OK)
+        
         return Response({"message": "Cart is empty"}, status=status.HTTP_204_NO_CONTENT)
-    
+
     def post(self, request, *args, **kwargs):
         data = request.data
         user = request.user
+     
         # Check if the product id exists in database
         try:
-            product_id = data['product']
+            product_id = data['product']['uid']
         except KeyError:
             return Response({'error': 'No product provided'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Check if the same product with the same user already exists in the cart
-        existing_cart_item = UserCart.objects.filter(user=user, product=product_id).first()
+        product = Product.objects.get(uid=product_id)
+        existing_cart_item = UserCart.objects.filter(user=user, product=product).first()
 
         if existing_cart_item:
             # If the product already exists, increment the quantity
             existing_cart_item.quantity += 1
             existing_cart_item.save()
             serializer = UserCartSerializer(existing_cart_item)
+           
             return Response({'msg': 'Product quantity incremented in the cart', 'data': serializer.data}, status=status.HTTP_200_OK)
         else:
             # If the product does not exist, create a new cart item
-            serializer = UserCartSerializer(data={'user': user.uid, 'product': product_id, 'quantity': 1})
-            
+            serializer = UserCartSerializer(data={'user': str(user.uid), 'product': product.uid, 'quantity': 1})
+
             if serializer.is_valid():
                 serializer.save()
                 return Response({'msg': 'Product added to the cart', 'data': serializer.data}, status=status.HTTP_201_CREATED)
@@ -53,15 +61,9 @@ class UserCartView(APIView):
 @permission_classes([IsAuthenticated,])
 def remove_cart_items(request):
     data = request.data
-    user = request.user
-    # Check if the product id exists in the database
-    try:
-        product_id = data['product']
-    except KeyError:
-        return Response({'error': 'Product ID not provided.'}, status=status.HTTP_400_BAD_REQUEST)
-
+   
     # Check if the same product with the same user already exists in the cart
-    existing_cart_item = UserCart.objects.filter(user=user, product=product_id).first()
+    existing_cart_item = UserCart.objects.filter(pk = data).first()
 
     if existing_cart_item:
         # If the product already exists, decrement the quantity
@@ -72,6 +74,6 @@ def remove_cart_items(request):
             return Response({'msg': 'Product quantity decremented in the cart', 'data': serializer.data}, status=status.HTTP_200_OK)
         else:
             existing_cart_item.delete()
-            return Response({'msg': 'Product removed from the cart.'}, status=status.HTTP_200_OK)
+            return Response({'msg': 'Product removed from the cart.'}, status=status.HTTP_204_NO_CONTENT)
     else:
         return Response({'error': 'Product not found in the cart.'}, status=status.HTTP_404_NOT_FOUND)

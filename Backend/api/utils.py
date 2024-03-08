@@ -2,8 +2,37 @@ from .accounts.models import CustomUser
 from django.core.mail import EmailMessage
 import os
 from rest_framework_simplejwt.tokens import RefreshToken
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from uuid import UUID
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from cloudinary.uploader import upload
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 
+
+def save_image_to_media_folder(image):
+    if not image:
+        return f'https://asset.cloudinary.com/deyj67ued/67f7a2d51646777c6d75069006f16cd3'
+
+    if isinstance(image, InMemoryUploadedFile):
+        unique_filename = f"profile_pics/profile_{image}"
+        custom_profile_pic_path = default_storage.save(unique_filename, ContentFile(''))
+        return default_storage.url(custom_profile_pic_path)
+    else:
+        return image
+
+def upload_to_cloudinary(image):
+    if not image:
+        return 'https://asset.cloudinary.com/deyj67ued/67f7a2d51646777c6d75069006f16cd3'
+
+    if isinstance(image, InMemoryUploadedFile):
+        upload_response = upload(image, folder="Bewra/profile_pics", overwrite=True)
+        return upload_response['secure_url']
+    else:
+        return image
+    
 def get_login_tokens(user):
   refresh = RefreshToken.for_user(user)
   return {
@@ -59,3 +88,12 @@ class Util:
       to=[data['to_email']]
     )
     email.send()
+
+
+
+
+class UUIDEncoder(DjangoJSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            return str(obj)
+        return super().default(obj)

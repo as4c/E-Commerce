@@ -10,6 +10,9 @@ import GoogleLoginButton from './SocialAuth/GoogleButton';
 const Signin = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    useEffect(() => {
+        document.title = 'User login';
+    }, []);
     const [showPassword, setShowPassword] = useState(false);
     const [values, setValues] = useState({
         email: "",

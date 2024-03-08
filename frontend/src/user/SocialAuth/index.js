@@ -11,6 +11,9 @@ const SocialAuth = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
   useEffect(() => {
+    document.title = 'Google Authentication';
+}, []);
+  useEffect(() => {
     const values = queryString.parse(location.search);
     const code = values.code ? values.code : null;
     if (code) {

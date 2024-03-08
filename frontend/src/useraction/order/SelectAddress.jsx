@@ -11,7 +11,9 @@ const SelectAddress = ({addres, handleSetAddress, payment, setPayment}) => {
     const { address } = useSelector((state) => state.address);
     const { isAuthenticated } = useSelector((state) => state.auth);
 
-    
+    useEffect(() => {
+        document.title = 'Select Address';
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {

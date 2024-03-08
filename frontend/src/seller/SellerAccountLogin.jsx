@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../homepage/Layout';
 import { sellerLogin } from '../features/actions/sellerActions';
 import { useDispatch } from 'react-redux';
@@ -14,7 +14,9 @@ const SellerAccountLogin = () => {
     const onChange = (e) =>{
         setShopId(e.target.value);
     }
-
+    useEffect(() => {
+        document.title = 'Seller login';
+    }, []);
     const handleSubmit = async(e) =>{
         e.preventDefault();
         const res1 = await dispatch(sellerLogin(shopId));

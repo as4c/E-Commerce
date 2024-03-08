@@ -1,5 +1,5 @@
 
-import  { useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { signup } from '../features/actions/authActions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,10 @@ import Loading from '../helper/Loading';
 const Signup = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    
+    useEffect(() => {
+        document.title = 'User Signup';
+    }, []);
     
     const [values, setValues] = useState({
         first_name: "",

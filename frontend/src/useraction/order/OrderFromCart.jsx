@@ -30,7 +30,9 @@ const OrderFromCart = () => {
     const { isAuthenticated, redirect, user } = useSelector((state) => state.auth);
     const { address } = useSelector((state) => state.address);
 
-
+    useEffect(() => {
+        document.title = 'Order from cart';
+    }, []);
     useEffect(() => {
         const fetchData = async () => {
             if (isAuthenticated) {

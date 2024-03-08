@@ -1,5 +1,5 @@
 // ForgotPasswordForm.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API } from '../backend';
 
@@ -7,7 +7,9 @@ const ForgotPasswordForm = () => {
     const [email, setEmail] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
-
+    useEffect(() => {
+        document.title = 'Send reset password email';
+    }, []);
     const handleChange = (e) => {
         setEmail(e.target.value);
     };

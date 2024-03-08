@@ -17,7 +17,9 @@ const Wishlist = () => {
         setRemove(remove + 1);
     }
     const { data } = useSelector((state) => state.wishlist);
-
+    useEffect(() => {
+        document.title = 'Your wishlists';
+    }, []);
     useEffect(() => {
         dispatch(loadWishlist());
     }, [dispatch, add, remove]);

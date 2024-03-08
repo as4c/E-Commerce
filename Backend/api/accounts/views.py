@@ -1,6 +1,5 @@
 import random
 from rest_framework.response import Response
-from rest_framework import viewsets
 from django.http import JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
@@ -12,8 +11,6 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import smart_str, force_bytes
 from django.contrib.auth import authenticate, logout
 from rest_framework.decorators import api_view, renderer_classes, permission_classes
-from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
-
 from api.utils import Util
 from .models import (
    CustomUser, 
@@ -27,10 +24,78 @@ from .serializers import (
   UserPasswordResetSerializer,
   SendPasswordResetEmailSerializer,
   AddressSerializer,
-  
+  UserSerializer
   )
 
+from urllib.parse import urlencode
+from rest_framework import serializers
+from django.conf import settings
+from django.shortcuts import redirect
+from .mixins import PublicApiMixin, ApiErrorsMixin
+from .utils import google_get_access_token, google_get_user_info, generate_tokens_for_user
+from api.utils import upload_to_cloudinary
 
+
+# Social Auth
+class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
+    class InputSerializer(serializers.Serializer):
+        code = serializers.CharField(required=False)
+        error = serializers.CharField(required=False)
+
+    def get(self, request, *args, **kwargs):
+        input_serializer = self.InputSerializer(data=request.GET)
+        input_serializer.is_valid(raise_exception=True)
+
+        validated_data = input_serializer.validated_data
+
+        code = validated_data.get('code')
+  
+        error = validated_data.get('error')
+     
+        login_url = f'{settings.BASE_FRONTEND_URL}/signin'
+       
+        if error or not code:
+            params = urlencode({'error': error})
+            return redirect(f'{login_url}?{params}')
+
+        redirect_uri = f'{settings.BASE_FRONTEND_URL}/google'
+        access_token = google_get_access_token(code=code, 
+                                               redirect_uri=redirect_uri)
+
+        user_data = google_get_user_info(access_token=access_token)
+
+        try:
+            user = CustomUser.objects.get(email=user_data['email'])
+            access_token, refresh_token = generate_tokens_for_user(user)
+            response_data = {
+                'user': UserSerializer(user).data,
+                'access_token': str(access_token),
+                'refresh_token': str(refresh_token)
+            }
+            return Response(response_data)
+        except CustomUser.DoesNotExist:
+            username = user_data['email'].split('@')[0]
+            first_name = user_data.get('given_name', '')
+            last_name = user_data.get('family_name', '')
+
+            user = CustomUser.objects.create(
+                username=username,
+                email=user_data['email'],
+                first_name=first_name,
+                last_name=last_name,
+                registration_method='google',
+                phone=None,
+                profile_pic = None,
+                verified = True,
+            )
+         
+            access_token, refresh_token = generate_tokens_for_user(user)
+            response_data = {
+                'user': UserSerializer(user).data,
+                'access_token': str(access_token),
+                'refresh_token': str(refresh_token)
+            }
+            return Response(response_data)
 
 
 
@@ -49,27 +114,30 @@ class UserRegistrationView(APIView):
   renderer_classes = [UserRenderer]
  
   def post(self, request, format=None):
-    serializer = UserRegistrationSerializer(data=request.data)
+    data = request.data
+    data['profile_pic'] = upload_to_cloudinary(data['profile_pic'])
+    serializer = UserRegistrationSerializer(data = data)
     serializer.is_valid(raise_exception=True)
     verify_token = generate_verification_token()
-    user = serializer.save(verification_token=verify_token)
+    user = serializer.save(verification_token = verify_token)
     # user = serializer.save()
     user_token = get_tokens_for_user(user)
     uid = urlsafe_base64_encode(force_bytes(user.uid))
-    link = 'http://127.0.0.1:8000/api/accounts/verify/' + uid + '/' + verify_token
-    body = 'Click Following Link to Verify Your Account' + link
+    # 'http://127.0.0.1:8000/api/accounts/verify/' + uid + '/' + verify_token
+    link = f'{settings.BASE_FRONTEND_URL}/accounts/verify/' + uid + '/' + verify_token
+    body = f"Hello {user.first_name},\n\nThank you for registering with Bewra.com. Please click the following link to verify your account and complete the registration process:\n\n{link}\n\nIf you didn't create an account on T-shirt Store, you can safely ignore this email.\n\nBest regards,\nThe Bewron ka Team."
     data = {
-    'subject':'Verify Your Account',
-    'body': body,
-    'to_email':user.email
+        'subject': 'Verify Your Bewra Account',
+        'body': body,
+        'to_email': user.email
     }
-    print("Account Verification email..."  , link)
+    print("Account Verification email sent to", user.email + "and link is : " + link)
     Util.send_email(data)
-    return Response({'token':user_token, 'msg':'Welcome to T-shirt store Please Verify Your Account'}, status = status.HTTP_201_CREATED)
+    return Response({'token': user_token, 'msg': 'Registration Successfull. \n Welcome to Bewra.com! Please check your email to verify your account.'}, status=status.HTTP_201_CREATED)
+
   
 
 @api_view(('GET',))
-# @renderer_classes([TemplateHTMLRenderer, JSONRenderer, UserRenderer])
 @permission_classes([AllowAny])
 def verify_account(request, uid, token):
 
@@ -78,21 +146,30 @@ def verify_account(request, uid, token):
 
     if user.verification_token == token:
         user.verified = True
-        link = 'http://127.0.0.1:8000/api/accounts/signin/'
-        body = '''Congratulation your account successfully verified.
-                  Enjoy your day.
-                  Login now.''' + link
+        link = f'{settings.BASE_FRONTEND_URL}/user/signin/'
+        body = f'''Dear {user.first_name},
+
+    Congratulations! Your account has been successfully verified. We appreciate your trust in our platform.
+
+    Enjoy the benefits of your account and start exploring our services. Should you have any questions or require assistance, feel free to reach out to our support team.
+
+    Login now to access your account and begin your journey with us.
+
+        {link}
+
+    Best regards,
+    The Bewra.com Team.
+    '''
         data = {
-        'subject':'Account Verification Successfull!',
-        'body': body,
-        'to_email':user.email
+            'subject': 'Account Verification Successful',
+            'body': body,
+            'to_email': user.email
         }
-        print("Login Now ..."  , link)
+        print(f"Login Now... {link}")
         Util.send_email(data)
         user.save()
-        return Response({"msg": "Account verified successfully!"}, status=status.HTTP_200_OK)
-    else:
-        raise Http404("Invalid token")
+        return Response({"msg": "Your account has been successfully verified!"}, status=status.HTTP_200_OK)
+
 
 class UserLoginView(APIView):
     permission_classes = [AllowAny]
@@ -122,6 +199,9 @@ class UserProfileView(APIView):
   
     def put(self, request, format=None):
         # Perform a full update
+        data = request.data
+        data['profile_pic'] = upload_to_cloudinary(data['profile_pic'])
+        
         serializer = UserProfileSerializer(request.user, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -130,25 +210,14 @@ class UserProfileView(APIView):
 
     def patch(self, request, format=None):
         # Perform a partial update
-        serializer = UserProfileSerializer(request.user, data=request.data, partial=True)
+        data = request.data
+        data['profile_pic'] = upload_to_cloudinary(data['profile_pic'])
+        
+        serializer = UserProfileSerializer(request.user, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-  
-
-class UserChangePasswordView(APIView):
-  renderer_classes = [UserRenderer]
-  permission_classes = [IsAuthenticated]
-
-  def post(self, request, format=None):
-    serializer = UserChangePasswordSerializer(data=request.data, context={'user':request.user})
-    serializer.is_valid(raise_exception=True)
-    return Response({'msg':'Password Changed Successfully'}, status=status.HTTP_200_OK)
-
-
-
 class UserChangePasswordView(APIView):
   renderer_classes = [UserRenderer]
   permission_classes = [IsAuthenticated]
@@ -175,7 +244,7 @@ class UserPasswordResetView(APIView):
 
 def signout(request):
     logout(request)
-    return JsonResponse({'message' : 'Logged out successfully.'})
+    return JsonResponse({'message' : 'Logged out Successfully.'}, status=status.HTTP_202_ACCEPTED)
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -189,14 +258,14 @@ def delete_user_account(request):
     }
     user.delete()
     Util.send_email(data)
-    return Response({"message": "Account deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+    return Response({'status' : 'success', "message": "Account deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 class AddressView(APIView):
    permission_classes = [IsAuthenticated]
    renderer_classes = [UserRenderer]
 
    def get(self, request):
-      addresses = Address.objects.filter(user=request.user).order_by('-created_at')
+      addresses = Address.objects.filter(user = request.user).order_by('-created_at')
       serializer = AddressSerializer(addresses, many=True)
       for data in serializer.data:
             data['user'] = str(data['user'])
@@ -206,7 +275,7 @@ class AddressView(APIView):
       serializer = AddressSerializer(data = request.data)
       serializer.is_valid(raise_exception=True)
       serializer.save(user = request.user)
-      return Response({'msg':'Address added successfully.'})
+      return Response({'msg':'Address added successfully.'}, status= status.HTTP_201_CREATED)
    
    def patch(self, request, address_uid):
       address = get_object_or_404(Address, uid=address_uid, user=request.user)
@@ -216,7 +285,7 @@ class AddressView(APIView):
       return Response({'msg': 'Address updated successfully.'}, status=status.HTTP_200_OK)
 
    def delete(self, request, address_uid):
-      address = get_object_or_404(Address, uid=address_uid, user=request.user)
+      address = get_object_or_404(Address, uid = address_uid, user = request.user)
       address.delete()
       return Response({'msg': 'Address deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
 

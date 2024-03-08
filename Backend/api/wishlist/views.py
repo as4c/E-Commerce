@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from api.renderer import UserRenderer
 from .models import UserWishList
-from .serializers import UserWishlistSerializer
+from .serializers import UserWishlistSerializer, WishlistGetSerializer
 from django.db.models import F
 
 class UserWishlistView(APIView):
@@ -13,15 +13,15 @@ class UserWishlistView(APIView):
     permission_classes = [IsAuthenticated]
     renderer_classes = [UserRenderer]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         user = request.user
         wishlist_item = UserWishList.objects.filter(user = user)
         if wishlist_item.exists():
-            serializer = UserWishlistSerializer(wishlist_item, many=True)
-            return Response(serializer.data)
+            serializer = WishlistGetSerializer(wishlist_item, many = True)
+            return Response(serializer.data, status = status.HTTP_200_OK)
         return Response({"message": "Wishlist is empty."}, status=status.HTTP_204_NO_CONTENT)
     
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         data = request.data
         user = request.user
         # Check if the product id exists in database
@@ -45,12 +45,13 @@ class UserWishlistView(APIView):
                 return Response({'msg': 'Product added to the your wishlist.', 'data': serializer.data}, status=status.HTTP_201_CREATED)
             else:
                 return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-            
-    def delete(self, request, *args, **kwargs):
-        user = request.user
-        product = request.data['product']
+
+
+
+    def delete(self, request):
+        item = request.data['data']
         # Remove an item from the cart
-        wishlist_item = UserWishList.objects.filter(user=user.uid, product=product)
+        wishlist_item = UserWishList.objects.filter(uid = item)
         if wishlist_item.exists():
             wishlist_item.delete()
             return Response({"msg":"Items removed from the wishlist."}, status=status.HTTP_204_NO_CONTENT)

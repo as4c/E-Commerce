@@ -4,6 +4,7 @@ from . models import Product, ProductImage
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField()
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret['seller'] = str(instance.seller)
@@ -13,6 +14,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
+        extra_kwargs = {'uid': {'read_only': True}}
 
 
 class ProductImageSerializer(serializers.ModelSerializer):

@@ -14,6 +14,9 @@ const OrderList = () => {
     const { order_loading, orders } = useSelector((state) => state.order);
 
     useEffect(() => {
+        document.title = 'Your Orders';
+    }, []);
+    useEffect(() => {
         dispatch(loadOrder());
     }, [dispatch]);
 

@@ -14,6 +14,6 @@ class UserCart(BaseModel):
         return f"{self.user.username} added {self.quantity} of {self.product.product_name}"
     
     class Meta:
-        ordering = ['-updated_at']
+        ordering = ['-created_at']
 
 

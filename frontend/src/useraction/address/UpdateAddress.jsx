@@ -12,7 +12,9 @@ const UpdateAddress = () => {
     const navigate = useNavigate();
 
     const { uid } = useParams();
-    
+    useEffect(() => {
+        document.title = 'Update delivery address';
+    }, []);
     useEffect(() => {
         const fetchData = async () => {
             dispatch(loadAddress());

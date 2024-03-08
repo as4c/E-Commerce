@@ -28,7 +28,9 @@ const OrderSummary = () => {
 
     const { isAuthenticated, redirect, user } = useSelector((state) => state.auth);
     const { address } = useSelector((state) => state.address);
-
+    useEffect(() => {
+        document.title = 'Order summary';
+    }, []);
     useEffect(() => {
         if (isAuthenticated) {
             dispatch(loadProductData({ uid }));

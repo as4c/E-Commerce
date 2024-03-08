@@ -1,4 +1,4 @@
-import React, {useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Layout from '../homepage/Layout';
@@ -20,15 +20,15 @@ const UpdatePage = () => {
     const [showStock, setShowStock] = useState(false);
     const [showDate, setShowDate] = useState(false);
 
-
+    
     const { uid } = useParams();
    
     const { data } = useSelector((state) => state.category);
   
-    const { loading, data: productData, error } = useSelector(
-        (state) => state.product
+    const { loading, list, error } = useSelector(
+        (state) => state.seller
     );
-    const product = productData.filter(product => product.uid === uid);
+    const product = list.filter(product => product.uid === uid);
     
     if(loading){
         return (
@@ -95,7 +95,7 @@ const UpdatePage = () => {
     }
 
     const renderDetailRow = (label, value) => (
-        <tr className='border-b-2'>
+        <tr className='border-b-2 mt-5'>
             <td>
                 <p className='font-semibold text-gray-400 inline'>{label}:</p> {value}
             </td>
@@ -109,21 +109,23 @@ const UpdatePage = () => {
 
     return (
         <Layout>
+            <div className='my-auto'>
+                <UpdateModal
+                    hideModalHandler={hideModalHandler}
+                    showModal={showModal}
+                    name={showName}
+                    brand={showBrandName}
+                    price={showPrice}
+                    description={showDescription}
+                    image={showImage}
+                    cat={showCategory}
+                    dct={showDiscount}
+                    vol={showVolume}
+                    ex_date={showDate}
+                    stocks={showStock}
+                />
 
-            <UpdateModal
-                hideModalHandler={hideModalHandler}
-                showModal={showModal}
-                name={showName}
-                brand={showBrandName}
-                price={showPrice}
-                description={showDescription}
-                image={showImage}
-                cat={showCategory}
-                dct={showDiscount}
-                vol={showVolume}
-                ex_date={showDate}
-                stocks={showStock}
-            />
+            </div>
 
             <div className="bg-white">
                 <div className='bg-white rounded shadow-md max-w-lg p-5 flex flex-col items-center justify-center bg-blur mx-auto my-auto' >

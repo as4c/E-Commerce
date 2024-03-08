@@ -3,7 +3,6 @@ from rest_framework.authtoken import views
 from .views import *
 urlpatterns = [
     path('',home,name='api.home'),
-    path('api-token-auth/',views.obtain_auth_token,name='api_token_auth'),
     path('accounts/',include('api.accounts.urls')),
     path('accounts/vendor/',include('api.vendor.urls')),
     path('accounts/delivery-boy/',include('api.deliveryboy.urls')),
@@ -13,5 +12,6 @@ urlpatterns = [
     path('users/wishlist/', include('api.wishlist.urls')),
     path('order/',include('api.order.urls')),
     path('payment/',include('api.payment.urls')),
-    path('', include('api.reaction.urls'))
+    path('notify/', include('api.notifications.urls')),
+    path('', include('api.reaction.urls')),
 ]

@@ -1,4 +1,4 @@
-import React, { useDebugValue, useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import { createAddress } from '../../features/actions/addressAction';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,9 @@ import Layout from '../../homepage/Layout';
 const AddAddress = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    useEffect(() => {
+        document.title = 'Add delivery address';
+    }, []);
     const [values, setValues] = useState({
         type: "",
         address1: "",

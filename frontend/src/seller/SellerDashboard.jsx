@@ -23,7 +23,9 @@ const SellerDashboard = () => {
         fetchData();
     }, [dispatch]);
 
-
+    useEffect(() => {
+        document.title = 'Seller dashboard';
+    }, []);
 
     if (loading || !sellers.owner) {
         return (

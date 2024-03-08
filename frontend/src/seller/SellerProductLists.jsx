@@ -5,6 +5,7 @@ import { loadProductList } from '../features/actions/sellerActions';
 import { BaseUrl } from '../backend';
 import { Link, useNavigate } from 'react-router-dom';
 import UpdateModal from '../product/UpdateModal';
+import Loading from '../helper/Loading';
 
 const SellerProductLists = () => {
   const [showModal, setShowModal] = useState(false);
@@ -13,34 +14,34 @@ const SellerProductLists = () => {
   const navigate = useNavigate();
 
   const { loading, list } = useSelector((state) => state.seller);
-
-  useEffect(()=>{
+  useEffect(() => {
+    document.title = 'Seller listed product';
+  }, []);
+  useEffect(() => {
     dispatch(loadProductList());
-  }, [])
+  }, [dispatch])
 
   const onUpdate = (uid) => {
     navigate(`/user/seller/update-product/${uid}`)
   }
 
-  if(list.length === 0){
+  if (list.length === 0) {
     return (
-      <div className="pt-10 bg-white">
-        <h1 className="text-center text-2xl font-bold text-gray-800">Loading....</h1>
-      </div>
+      <Loading />
     )
   }
 
- 
+
   const showModalHandler = () => {
     setShowModal(true);
   };
   const hideModalHandler = () => {
     setShowModal(false);
   };
-  
+
   return (
     <Layout>
-      
+
       <div className='bg-white w-full mx-auto'>
         <div className="pt-10">
           <h1 className="text-center text-2xl font-bold text-gray-800">Your Products</h1>
@@ -61,36 +62,32 @@ const SellerProductLists = () => {
             </thead>
 
             <tbody className='w-full mt-5 pt-5'>
-              { list && list.map((data, uid) => (
-                  // <a to={`/product/${data.uid}`} className=''>
-                  <tr key={uid} className='px-auto mx-auto items-center text-center border-b-2'>
-                    <td className='justify-center flex'>
+              {list && list.map(data => (
+                <tr key={data.uid} className='px-auto mx-auto items-center text-center border-b-2'>
+                  <td className='justify-center flex'>
                     <Link to={`/product/${data.uid}`}>
-                      <img src={`${BaseUrl}/${data.image}`} alt="No Product Image" className='max-w-full h-40' />
+                      <img src={`${data.image}`} alt="No Product Image" className='max-w-full h-40' />
                     </Link>
-                    </td>
-                    <td className=''> 
+                  </td>
+                  <td className=''>
                     <Link to={`/product/${data.uid}`}>
-                    {data.product_name}
+                      {data.product_name}
                     </Link>
-                    </td>
-                    <td className=''> 
+                  </td>
+                  <td className=''>
                     <Link to={`/product/${data.uid}`}>
-                    {data.volume} ML.
+                      {data.volume} ML.
                     </Link>
-                    </td>
-                    <td className=''>Rs. <del className='px-3 text-red-700'>{data.actual_price}.00 </del>   {data.effective_price}.00</td>
-                    <td className=''>{data.stock}</td>
-                    <td className=''>{data.discount}</td>
-                    <td className='text-center items-center flex-row justify-between '>
-                      <button onClick = {() => onUpdate(data.uid)} className=' block bg-emerald-500 hover:bg-emerald-700 text-white p-2 rounded-md m-1 text-center mx-auto'>Update</button>
-                      <button className=' block bg-red-600 hover:bg-red-700 text-white p-2 rounded-md m-2 text-center px-2 mx-auto'>Delete</button>
-                    </td>
-                  </tr>
-                
-                
+                  </td>
+                  <td className=''>Rs. <del className='px-3 text-red-700'>{data.actual_price}.00 </del>   {data.effective_price}.00</td>
+                  <td className=''>{data.stock}</td>
+                  <td className=''>{data.discount}</td>
+                  <td className='text-center items-center flex-row justify-between '>
+                    <button onClick={() => onUpdate(data.uid)} className=' block bg-emerald-500 hover:bg-emerald-700 text-white p-2 rounded-md m-1 text-center mx-auto'>Update</button>
+                    <button className=' block bg-red-600 hover:bg-red-700 text-white p-2 rounded-md m-2 text-center px-2 mx-auto'>Delete</button>
+                  </td>
+                </tr>
               ))}
-              
             </tbody>
           </table>
         </div>

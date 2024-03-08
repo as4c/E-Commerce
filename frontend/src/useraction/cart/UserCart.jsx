@@ -10,7 +10,9 @@ const UserCart = () => {
     const [add, setAdd] = useState(0);
     const [remove, setRemove] = useState(0);
 
-
+    useEffect(() => {
+        document.title = 'Cart';
+    }, []);
 
     const removeItem = (uid) => {
         dispatch(removeFromCart(uid));

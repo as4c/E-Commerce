@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../homepage/Layout'
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +28,9 @@ const CreateSellerAccountComp = () => {
         country: ""
     });
 
-
+    useEffect(() => {
+        document.title = 'Create seller account';
+    }, []);
     const { shopName, gstNumber, alternatePhone, aadharNumber, confirmAadharNumber, bankAccount, confirmBankAccount, bankIfscCode, confirmIfscCode, address1, landmark, city, state, zipcode, country } = values;
 
     const handleChange = (data) =>

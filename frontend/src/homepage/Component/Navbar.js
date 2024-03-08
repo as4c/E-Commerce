@@ -138,7 +138,7 @@ const Navbar = () => {
                     <div className="flex items-center justify-between">
                         {/* Brand logo */}
                         <div className='logo mx-5  md:items-center mb-4'>
-                            <a href="/" className="text-white start-0 font-bold text-2xl md:mr-6 logo">
+                            <a href="/" className="text-red-600 start-0 font-bold text-2xl md:mr-6 logo ">
                                 Bewra
                             </a>
 

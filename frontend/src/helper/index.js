@@ -74,8 +74,8 @@ export const mapPaymentStatusToLabel = (code) => {
       case 'F':
         return 'Failed';
 
-      case 'C':
-        return 'Cancelled';
+      case 'R':
+        return 'Refunded';
 
       case 'S':
         return 'Success';

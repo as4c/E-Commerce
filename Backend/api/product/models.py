@@ -6,23 +6,24 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import InMemoryUploadedFile
-
+from ckeditor.fields import RichTextField
 
 class Product(BaseModel):
     seller                  =   models.ForeignKey(VendorUser, on_delete = models.CASCADE)
     product_name            =   models.CharField(max_length = 50,blank = True, null = True)
-    product_description     =   models.TextField()
-    category                =   models.ForeignKey(Category,on_delete = models.SET_NULL, blank=True, null=True)
+    product_description     =   RichTextField()
+    category                =   models.ForeignKey(Category, on_delete = models.SET_NULL, blank=True, null=True)
     actual_price            =   models.IntegerField(default = 0)
     effective_price         =   models.IntegerField(default = 0)
     discount                =   models.IntegerField(default = 0)
     stock                   =   models.IntegerField(default = 100)
     is_available            =   models.BooleanField(default = True, blank = True)
-   
+    image                   =   models.ImageField(upload_to="product_images/",blank=True,null=True)
+    brand_name              =   models.CharField(max_length = 50, default = "unknown")
+    volume                  =   models.CharField(max_length = 10, default = "1")
+    expiry_date             =   models.DateTimeField(null = True, blank = True)
 
 
-
-    # image                 =   models.ImageField(upload_to='images/',blank=True,null=True)
     
     class Meta:
         ordering              = ['-updated_at']
@@ -56,7 +57,7 @@ class ProductImage(BaseModel):
             self.image = processed_image
             super().save(*args, **kwargs)
         else:
-            self.image =  f"{settings.MEDIA_URL}/product_images/default.png"
+            self.image =  f"https://res.cloudinary.com/deyj67ued/image/upload/v1709889339/media/Bewra/product_images/default_y4rzfq.jpg"
             super().save(*args, **kwargs)
         
 
@@ -68,7 +69,7 @@ class ProductImage(BaseModel):
 
     def save_image_to_media_folder(self):
         if not self.image:
-            return f'{settings.MEDIA_URL}/product_images/default.png'
+            return f'https://res.cloudinary.com/deyj67ued/image/upload/v1709889339/media/Bewra/product_images/default_y4rzfq.jpg'
 
         # Check the type of profile_pic
         if isinstance(self.image, InMemoryUploadedFile):

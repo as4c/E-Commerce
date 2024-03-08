@@ -50,6 +50,12 @@ class DeliveryBoySerializer(serializers.ModelSerializer):
         model = DeliveryBoy
         fields = '__all__'
 
+class DeliveryProfileSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source='user.username', read_only=True)
+    class Meta:
+        model = DeliveryBoy
+        fields = '__all__'
+
 class DeliveryBoyLoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeliveryBoy

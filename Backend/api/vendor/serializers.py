@@ -9,7 +9,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ('email', 'first_name', 'last_name', 'username', 'phone', 'profile_pic', 'gender')
 class VendorUserSerializer(serializers.ModelSerializer):
-
+    owner = UserSerializer() 
+    created_at_formatted = serializers.DateTimeField(source='created_at', format="%d %b. %Y", read_only=True)
     retype_bank_account = serializers.CharField(max_length=15, write_only=True)
     retype_aadhar = serializers.CharField(max_length=16, write_only=True)
     retype_ifsc_code = serializers.CharField(max_length=16, write_only=True)
@@ -17,7 +18,7 @@ class VendorUserSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
        
         ret = super().to_representation(instance)
-        ret['owner'] = str(instance.owner)
+        # ret['owner'] = str(instance.owner)
         return ret
 
     def validate(self, data):
@@ -58,6 +59,7 @@ class VendorUserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class VendorLoginSerializer(serializers.ModelSerializer):
+    owner = UserSerializer(read_only = True) 
     class Meta:
         model = VendorUser
-        fields = ['vendor_id']
+        fields = ['vendor_id', 'owner']

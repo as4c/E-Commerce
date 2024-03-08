@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import Layout from '../homepage/Layout';
 
 const DeliveryBoyDashboard = () => {
     const { deliveryBoyData } = useSelector((state) => state.deliveryBoy);
     const { user } = useSelector((state) => state.auth);
-
+    useEffect(() => {
+        document.title = 'Delivery boy profile';
+    }, []);
     return (
         <Layout>
             <div className="bg-gray-100">

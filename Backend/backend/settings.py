@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
-
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,15 +39,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # 3rd party apps
     'corsheaders',
     'rest_framework.authtoken',
     'rest_framework',
     'rest_framework_simplejwt',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
+    'ckeditor',
+    'cloudinary',
+    'cloudinary_storage',
 
+    # My Apps
     'api',   
     'api.product',
     'api.category',
@@ -58,7 +60,8 @@ INSTALLED_APPS = [
     'api.deliveryboy',
     'api.cart',
     'api.wishlist',
-    'api.reaction'
+    'api.reaction',
+    'api.notifications',
 ]
 
 MIDDLEWARE = [
@@ -98,12 +101,31 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+ 
+
+
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DB_URL')
+    )
 }
+# 'default': {
+#     'ENGINE': 'django.db.backends.postgresql',
+#     'NAME': os.environ.get('DATABASE_NAME'),
+#     'USER': os.environ.get('DB_USER'),
+#     'PASSWORD': os.environ.get('DB_PASSWORD'),
+#     'HOST': os.environ.get('DB_URL'),
+#     'PORT': os.environ.get('DB_PORT'),
+# }
 
 
 # Password validation
@@ -142,8 +164,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_URL ='/media/'
-MEDIA_ROOT=os.path.join(BASE_DIR,'media')
+MEDIA_URL ='/Bewra/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR, 'Bewra', 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -151,22 +173,23 @@ MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
-# CORS_ORIGIN_WHITELIST = ['http://localhost:3000']
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000']
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
 
-
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000",'https://*.127.0.0.1']
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
+    # allow read-only access for unauthenticated users.
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+  
 }
+
 
 # for using custom user authentications
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -191,17 +214,21 @@ SIMPLE_JWT = {
 
 PASSWORD_RESET_TIMEOUT=900   
 
-# Email Configuration
+# Email message Configuration
 EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'as4avengersagar@gmail.com'
-EMAIL_HOST_PASSWORD = 'xqgxlckwytixerre'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 # Social auth config
+BASE_FRONTEND_URL = os.environ.get('BASE_FRONTEND_URL', default='http://localhost:3000')
+GOOGLE_OAUTH2_CLIENT_ID = os.environ.get('GOOGLE_OAUTH2_CLIENT_ID')
+GOOGLE_OAUTH2_CLIENT_SECRET = os.environ.get('GOOGLE_OAUTH2_CLIENT_SECRET')
+
+
 AUTHENTICATION_BACKENDS = (
-    'allauth.account.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -209,49 +236,138 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
-LOGIN_REDIRECT_URL = '/'
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id' : '1006852206139-bobbt5ej51fqnk8tumtq0a6b6q4vrgmj.apps.googleusercontent.com',
-            'secret' : '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',
-            'key' : ''
-        },
-         'SCOPE': ['profile', 
-                   'email', 
-                   'https://www.googleapis.com/auth/userinfo.profile', 
-                   'https://www.googleapis.com/auth/userinfo.email'],
-
-        'AUTH_PARAMS': {'access_type': 'online'},
-    }
-}
-
-
-
-# CORS_ALLOW_METHODS = [
-#     "DELETE",
-#     "GET",
-#     "OPTIONS",
-#     "PATCH",
-#     "POST",
-#     "PUT",
-# ]
-
-# CORS_ALLOW_HEADERS = [
-#     "accept",
-#     "accept-encoding",
-#     "authorization",
-#     "content-type",
-#     "dnt",
-#     "origin",
-#     "user-agent",
-#     "x-csrftoken",
-#     "x-requested-with",
-# ]
-
-
-import os
-
+# Razorpay keys
 PUBLIC_KEY = os.environ.get('PUBLIC_KEY')
 SECRET_KEY = os.environ.get('SECRET_KEY')
+
+# Cloudinary config
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME' : os.environ.get('CLOUDNARY_CLOUD_NAME'),
+    'API_KEY' : os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET' : os.environ.get('CLOUDINARY_API_SECRET')
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CKEDITOR_CONFIGS = {
+    "default": {
+        "skin": "moono",
+        "toolbar": "Custom",
+        "allowedContent": True,
+        "extraAllowedContent": "object[id,name,width,height];",
+        "extraPlugins": "iframe",
+        "iframe_attributes": {
+            "sandbox": "allow-scripts allow-same-origin allow-popups allow-presentation allow-forms",
+            "allowfullscreen": "",
+            "loading": "lazy",
+            "referrerpolicy": "no-referrer-when-downgrade",
+        },
+        "toolbar_Custom": [
+            {
+                "name": "document",
+                "items": [
+                    "Source",
+                    "-",
+                    "Save",
+                    "NewPage",
+                    "Preview",
+                    "Print",
+                    "-",
+                    "Templates",
+                ],
+            },
+            {
+                "name": "clipboard",
+                "items": [
+                    "Cut",
+                    "Copy",
+                    "Paste",
+                    "PasteText",
+                    "PasteFromWord",
+                    "-",
+                    "Undo",
+                    "Redo",
+                ],
+            },
+            {"name": "editing", "items": ["Find", "Replace", "-", "SelectAll"]},
+            {
+                "name": "forms",
+                "items": [
+                    "Form",
+                    "Checkbox",
+                    "Radio",
+                    "TextField",
+                    "Textarea",
+                    "Select",
+                    "Button",
+                    "ImageButton",
+                    "HiddenField",
+                ],
+            },
+            "/",
+            {
+                "name": "basicstyles",
+                "items": [
+                    "Bold",
+                    "Italic",
+                    "Underline",
+                    "Strike",
+                    "Subscript",
+                    "Superscript",
+                    "-",
+                    "RemoveFormat",
+                ],
+            },
+            {
+                "name": "paragraph",
+                "items": [
+                    "NumberedList",
+                    "BulletedList",
+                    "-",
+                    "Outdent",
+                    "Indent",
+                    "-",
+                    "Blockquote",
+                    "CreateDiv",
+                    "-",
+                    "JustifyLeft",
+                    "JustifyCenter",
+                    "JustifyRight",
+                    "JustifyBlock",
+                    "-",
+                    "BidiLtr",
+                    "BidiRtl",
+                    "Language",
+                ],
+            },
+            {"name": "links", "items": ["Link", "Unlink", "Anchor"]},
+            {
+                "name": "insert",
+                "items": [
+                    "Image",
+                    "Flash",
+                    "Table",
+                    "HorizontalRule",
+                    "Smiley",
+                    "SpecialChar",
+                    "PageBreak",
+                    "Iframe",
+                    "Embed",
+                ],
+            },
+            "/",
+            {
+                "name": "styles",
+                "items": ["Styles", "Format", "Font", "FontSize"],
+            },
+            {"name": "colors", "items": ["TextColor", "BGColor"]},
+            {"name": "tools", "items": ["Maximize", "ShowBlocks"]},
+            {
+                "name": "about",
+                "items": ["About"],
+            },
+        ],
+        "language": "en",
+    }
+}

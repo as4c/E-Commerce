@@ -12,8 +12,8 @@ class RazorpayClient:
             "payment_capture": "1"
         }
         try:
-            self.order = client.order.create(data=data)
-            return self.order
+            order = client.order.create(data=data)
+            return order
         except Exception as e:
             raise ValidationError(
                 {
@@ -24,12 +24,12 @@ class RazorpayClient:
     
     def verify_payment(self, razorpay_order_id, razorpay_payment_id, razorpay_signature):
         try:
-            self.verify_signature = client.utility.verify_payment_signature({
+            verify_signature = client.utility.verify_payment_signature({
                 'razorpay_order_id': razorpay_order_id,
                 'razorpay_payment_id': razorpay_payment_id,
                 'razorpay_signature': razorpay_signature
             })
-            return self.verify_signature
+            return verify_signature
         except Exception as e:
             raise ValidationError(
                 {

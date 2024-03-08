@@ -9,6 +9,9 @@ import { unwrapResult } from '@reduxjs/toolkit';
 const UpdateAccount = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = 'Update profile';
+}, []);
   const {loading, user} = useSelector((state)=> state.auth);
 
   useEffect(()=> {

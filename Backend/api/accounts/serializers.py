@@ -7,11 +7,12 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from api.utils import Util
 import random
-class UserRegistrationSerializer(serializers.ModelSerializer):
- 
-  password2 = serializers.CharField(style={'input_type':'password'}, write_only=True)
-  profile_pic = serializers.ImageField()
+from rest_framework.response import Response
+from rest_framework import status
 
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+  password2 = serializers.CharField(style={'input_type':'password'}, write_only=True)
   class Meta:
     model = CustomUser
     fields = ['email', 'first_name', 'last_name', 'username', 'phone', 'profile_pic', 'gender', 'password', 'password2', 'verification_token']
@@ -39,7 +40,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
   class Meta:
     model = CustomUser
-    fields = ['first_name', 'last_name', 'email', 'username', 'profile_pic', 'phone', 'gender']
+    exclude = ['password']
 
 class UserChangePasswordSerializer(serializers.Serializer):
   password = serializers.CharField(max_length=255, style={'input_type': 'password'}, write_only=True)
@@ -116,68 +117,22 @@ class UserPasswordResetSerializer(serializers.Serializer):
 
 
 class AddressSerializer(serializers.ModelSerializer):
-
+    user = serializers.StringRelatedField()
     class Meta:
         model = Address
         fields = '__all__'
+      
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['uid'] = str(instance.uid)
+        return ret
 
 def generate_shop_id(length = 10):
     return ''.join(random.SystemRandom().choice([chr(i) for i in range (97,123)] + [str(i) for i in range(10)]) for _ in range(length))
 
-# class VenderUserSerializer(serializers.ModelSerializer):
-#   retype_bank_account = serializers.CharField(max_length = 15, write_only=True)
-#   retype_aadhar = serializers.CharField(max_length = 16, write_only=True)
- 
-#   class Meta:
-#     model = VenderUser
-#     # fields = '__all__'
-#     exclude = ['shop_id']
-#   def validate(self, attrs):
-#     aadhar_number = attrs.pop('aadhar_number', None)
-#     retype_aadhar_number = attrs.pop('retype_aadhar', None)
-#     bank_account = attrs.pop('bank_account', None)
-#     retype_bank_account = attrs.pop('retype_bank_account', None)
-
-#     if aadhar_number != retype_aadhar_number:
-#       raise serializers.ValidationError("Aadhar Card Numbers doesn't match!")
-    
-#     if bank_account != retype_bank_account:
-#       raise serializers.ValidationError("Bank Account Numbers doesn't match!")
-#     return attrs
-
-#   def create(self, validated_data):
-#       shop_id = validated_data.get('shop_id', generate_shop_id())
-#       return VenderUser.objects.create(**validated_data)
-
-    # fields = ['alternate_phone','shop_id', 'shop_name', 'shop_gst_id', 'aadhar_number', 'bank_account', 'address1', 'landmark', 'city', 'state', 'zipcode', 'country', 'retype_bank_account', 'retype_aadhar']
-    
-
-  # # Validating Password and Confirm Password while Registration
-  # def validate(self, attrs):
-  #   aadhar_number = attrs.pop('aadhar_number', None)
-  #   retype_aadhar_number = attrs.pop('retype_aadhar', None)
-  #   bank_account = attrs.pop('bank_account', None)
-  #   retype_bank_account = attrs.pop('retype_bank_account', None)
-
-  #   if aadhar_number != retype_aadhar_number:
-  #     raise serializers.ValidationError("Aadhar Card Numbers doesn't match!")
-    
-  #   if bank_account != retype_bank_account:
-  #     raise serializers.ValidationError("Bank Account Numbers doesn't match!")
-  #   return attrs
-
-  # def create(self, validate_data):
-  #   return VenderUser.objects.create(**validate_data)
 
 
-
-# class VenderLoginSerializer(serializers.ModelSerializer):
-#   class Meta:
-#     model = VenderUser
-#     fields = ['shop_id']
-
-# class VenderProfileSerializer(serializers.ModelSerializer):
-#   class Meta:
-#     model = VenderUser
-#     fields = ['user', 'alternate_phone', 'shop_id', 'shop_name', 'shop_gst_id', 'address1', 'landmark', 'city', 'zipcode', 'country']
-
+class UserSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = CustomUser
+    fields = ('email', 'first_name', 'last_name', 'username', 'phone', 'profile_pic', 'gender')

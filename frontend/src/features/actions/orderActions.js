@@ -67,7 +67,7 @@ export const createOrder = createAsyncThunk(
                     'Authorization': `JWT ${localStorage.getItem('access')}`,
                 },
                 body : JSON.stringify({
-                    product: product,
+                    product: product.uid,
                     customer_address: address,
                     quantity,
                     payment_mode
