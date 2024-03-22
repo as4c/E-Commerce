@@ -1,14 +1,9 @@
-![Screenshot from 2024-03-22 09-49-10](https://github.com/as4c/E-Commerce/assets/84590258/2899e6a1-1d36-4bdf-b12e-16665c9c7395)
 ![Screenshot from 2024-03-22 09-47-17](https://github.com/as4c/E-Commerce/assets/84590258/dbca9e11-bd77-4d32-9aa1-92fd688dea4d)
-<div>
-    <img src="https://github.com/as4c/E-Commerce/assets/84590258/2899e6a1-1d36-4bdf-b12e-16665c9c7395" alt="Screenshot 1" style="width: 45%; float: left; margin-right: 5px;">
-    <img src="https://github.com/as4c/E-Commerce/assets/84590258/dbca9e11-bd77-4d32-9aa1-92fd688dea4d" alt="Screenshot 2" style="width: 45%; float: left;">
-</div>
 
 # E-Commerce Django Project
 
 This is an eCommerce web application built with Django and React.js. It utilizes Django Rest Framework (DRF) for building RESTful APIs in the backend and incorporates features such as user authentication, product management, search functionality, order processing, and product categories. For order processing, the Razorpay is integrated.
-
+### check it out here https://bewra.vercel.app
 ## Features
 
 - User Authentication: Users can register, log in, and manage their accounts.
@@ -28,10 +23,21 @@ This is an eCommerce web application built with Django and React.js. It utilizes
 - Frontend:
   - React.js: JavaScript library for building interactive user interfaces.
   - React Router Dom: Library for handling client-side routing in a React application.
-![Screenshot from 2024-03-22 09-47-59](https://github.com/as4c/E-Commerce/assets/84590258/26aba92a-742e-4db8-96ec-a9a68bd1bcd1)
-![Upl![Screenshot from 2024-03-22 09-49-28](https://github.com/as4c/E-Commerce/assets/84590258/3a3fce0d-6651-4ccf-a6ba-a17714170f7d)
-oadin![Screenshot from 2024-03-22 09-49-36](https://github.com/as4c/E-Commerce/assets/84590258/ed97db1f-238c-43eb-a20b-0c391fe66f14)
-g Screenshot from 2024-03-22 09-49-10.png…]()
+## Screenshots 
+<div style="display: flex;">
+    <img src="https://github.com/as4c/E-Commerce/assets/84590258/44a8452e-b080-4cbb-a8cc-de7f0bfd87d8" alt="Screenshot 1" style="width: 45%; margin-right: 5px;">
+    <img src="https://github.com/as4c/E-Commerce/assets/84590258/8d5b125d-41f1-4a28-bbf6-d47ef74d370b" alt="Screenshot 2" style="width: 45%;">
+</div>
+
+<div style="display: flex;">
+    <img src="https://github.com/as4c/E-Commerce/assets/84590258/73fdbd0f-aea2-422a-9eac-ac978d23f08a" alt="Screenshot 3" style="width: 45%; margin-right: 5px;">
+    <img src="https://github.com/as4c/E-Commerce/assets/84590258/cec49631-06ee-443c-ad36-3d6822755e22" alt="Screenshot 4" style="width: 45%;">
+</div>
+
+<div style="display: flex;">
+    <img src="https://github.com/as4c/E-Commerce/assets/84590258/403cec07-cb37-4891-bcb5-50fc5127a578" alt="Screenshot 5" style="width: 45%; margin-right: 5px;">
+    <img src="https://github.com/as4c/E-Commerce/assets/84590258/cf00195e-e879-43f6-8a10-a6ebb3e3c8b4" alt="Screenshot 6" style="width: 45%;">
+</div>
 
 
 ## Installation and Setup
