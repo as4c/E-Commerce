@@ -1,4 +1,11 @@
-# eCommerce Django Project
+![Screenshot from 2024-03-22 09-49-10](https://github.com/as4c/E-Commerce/assets/84590258/2899e6a1-1d36-4bdf-b12e-16665c9c7395)
+![Screenshot from 2024-03-22 09-47-17](https://github.com/as4c/E-Commerce/assets/84590258/dbca9e11-bd77-4d32-9aa1-92fd688dea4d)
+<div>
+    <img src="https://github.com/as4c/E-Commerce/assets/84590258/2899e6a1-1d36-4bdf-b12e-16665c9c7395" alt="Screenshot 1" style="width: 45%; float: left; margin-right: 5px;">
+    <img src="https://github.com/as4c/E-Commerce/assets/84590258/dbca9e11-bd77-4d32-9aa1-92fd688dea4d" alt="Screenshot 2" style="width: 45%; float: left;">
+</div>
+
+# E-Commerce Django Project
 
 This is an eCommerce web application built with Django and React.js. It utilizes Django Rest Framework (DRF) for building RESTful APIs in the backend and incorporates features such as user authentication, product management, search functionality, order processing, and product categories. For order processing, the Razorpay is integrated.
 
@@ -21,6 +28,11 @@ This is an eCommerce web application built with Django and React.js. It utilizes
 - Frontend:
   - React.js: JavaScript library for building interactive user interfaces.
   - React Router Dom: Library for handling client-side routing in a React application.
+![Screenshot from 2024-03-22 09-47-59](https://github.com/as4c/E-Commerce/assets/84590258/26aba92a-742e-4db8-96ec-a9a68bd1bcd1)
+![Upl![Screenshot from 2024-03-22 09-49-28](https://github.com/as4c/E-Commerce/assets/84590258/3a3fce0d-6651-4ccf-a6ba-a17714170f7d)
+oadin![Screenshot from 2024-03-22 09-49-36](https://github.com/as4c/E-Commerce/assets/84590258/ed97db1f-238c-43eb-a20b-0c391fe66f14)
+g Screenshot from 2024-03-22 09-49-10.png…]()
+
 
 ## Installation and Setup
 
