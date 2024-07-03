@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-x*ykqto7f*@*#nmi*_l2ametk2rw@_q3wrhwq_xm!_0%4768z9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -101,23 +101,23 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
  
 
 
 
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DB_URL')
-    )
-}
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=os.environ.get('DB_URL')
+#     )
+# }
 # 'default': {
 #     'ENGINE': 'django.db.backends.postgresql',
 #     'NAME': os.environ.get('DATABASE_NAME'),
@@ -245,7 +245,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # Cloudinary config
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME' : os.environ.get('CLOUDNARY_CLOUD_NAME'),
+    'CLOUD_NAME' : os.environ.get('CLOUDINARY_CLOUD_NAME'),
     'API_KEY' : os.environ.get('CLOUDINARY_API_KEY'),
     'API_SECRET' : os.environ.get('CLOUDINARY_API_SECRET')
 }

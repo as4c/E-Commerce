@@ -34,9 +34,10 @@ from django.shortcuts import redirect
 from .mixins import PublicApiMixin, ApiErrorsMixin
 from .utils import google_get_access_token, google_get_user_info, generate_tokens_for_user
 from api.utils import upload_to_cloudinary
-
+from rest_framework.parsers import MultiPartParser, FormParser
 
 # Social Auth
+
 class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
     class InputSerializer(serializers.Serializer):
         code = serializers.CharField(required=False)
@@ -112,7 +113,7 @@ def generate_verification_token(length = 32):
 class UserRegistrationView(APIView):
   permission_classes = [AllowAny]
   renderer_classes = [UserRenderer]
- 
+  parser_classes = [MultiPartParser, FormParser]
   def post(self, request, format=None):
     data = request.data
     data['profile_pic'] = upload_to_cloudinary(data['profile_pic'])
@@ -174,12 +175,14 @@ def verify_account(request, uid, token):
 class UserLoginView(APIView):
     permission_classes = [AllowAny]
     renderer_classes = [UserRenderer]
+    parser_classes = [MultiPartParser, FormParser]
     def post(self, request, format=None):
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         email = serializer.data.get('email')
         password = serializer.data.get('password')
         user = authenticate(email=email, password=password)
+        print(user)
         if user is not None:
             if user.verified is not False:
                 token = get_tokens_for_user(user)
